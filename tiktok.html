@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}TikTok Video Downloader - Free No Watermark Download | SnapSaver{% endblock %}
+
+{% block description %}Download TikTok videos without watermark for free. Support for HD quality downloads. Fast, secure, and no registration required.{% endblock %}
+
+{% block keywords %}TikTok downloader, TikTok video download, TikTok no watermark, free TikTok downloader, TikTok to MP4{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-lg">
+            <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">
+                    <i class="fab fa-tiktok me-2"></i>TikTok Download
+                </h4>
+            </div>
+            <div class="card-body">
+                <!-- URL Display -->
+                <div class="alert alert-info">
+                    <strong>TikTok URL:</strong> <a href="{{ url }}" target="_blank" class="text-decoration-none">{{ url }}</a>
+                </div>
+
+                <!-- Video Info -->
+                <div id="videoInfo" class="mb-4" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img id="videoThumbnail" class="img-fluid rounded" alt="Video thumbnail">
+                        </div>
+                        <div class="col-md-8">
+                            <h5 id="videoTitle"></h5>
+                            <p class="text-muted mb-2"><i class="fas fa-user"></i> <span id="videoUploader"></span></p>
+                            <p class="text-muted mb-2"><i class="fas fa-heart"></i> <span id="videoViews"></span> likes</p>
+                            <p class="text-muted mb-2"><i class="fas fa-clock"></i> <span id="videoDuration"></span></p>
+                            <p class="small" id="videoDescription"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Options -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <button class="btn btn-primary btn-lg w-100" onclick="downloadVideo(false)">
+                            <i class="fas fa-video me-2"></i>Download Video (No Watermark)
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-success btn-lg w-100" onclick="downloadVideo(true)">
+                            <i class="fas fa-music me-2"></i>Download Audio (MP3)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TikTok Features -->
+                <div class="alert alert-light">
+                    <h6><i class="fab fa-tiktok text-dark me-2"></i>TikTok Download Features:</h6>
+                    <ul class="mb-0">
+                        <li>Download TikTok videos without watermark</li>
+                        <li>Support for HD quality downloads</li>
+                        <li>Audio extraction to MP3 format</li>
+                        <li>Fast download speeds</li>
+                        <li>Works with all TikTok video formats</li>
+                    </ul>
+                </div>
+
+                <!-- Back Button -->
+                <div class="mt-4 text-center">
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Download Modal -->
+<div class="modal fade" id="downloadModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center py-4">
+                <div class="spinner-border text-dark mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h5>Downloading...</h5>
+                <p class="text-muted">Please wait while we process your download</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const videoUrl = "{{ url }}";
+
+// Load video info on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadVideoInfo();
+});
+
+function loadVideoInfo() {
+    fetch(`/get_info?url=${encodeURIComponent(videoUrl)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Error loading video info:', data.error);
+                return;
+            }
+            
+            document.getElementById('videoTitle').textContent = data.title || 'TikTok Video';
+            document.getElementById('videoUploader').textContent = data.uploader || 'Unknown';
+            document.getElementById('videoViews').textContent = data.view_count?.toLocaleString() || 'N/A';
+            document.getElementById('videoDuration').textContent = formatDuration(data.duration);
+            document.getElementById('videoDescription').textContent = data.description || 'No description available';
+            
+            if (data.thumbnail) {
+                document.getElementById('videoThumbnail').src = data.thumbnail;
+            }
+            
+            document.getElementById('videoInfo').style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Error loading video info:', error);
+        });
+}
+
+function downloadVideo() {
+    const downloadModal = new bootstrap.Modal(document.getElementById('downloadModal'));
+    downloadModal.show();
+    
+    const downloadUrl = `/download?url=${encodeURIComponent(videoUrl)}`;
+    
+    // Create a temporary link to trigger download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = '';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Hide modal after a delay
+    setTimeout(() => {
+        downloadModal.hide();
+    }, 3000);
+}
+
+function formatDuration(seconds) {
+    if (!seconds) return 'N/A';
+    
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+}
+</script>
+{% endblock %}

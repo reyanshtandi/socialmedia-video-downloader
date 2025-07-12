@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy - SnapSaver{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="mb-4">Privacy Policy</h1>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h4>1. Information We Collect</h4>
+                    <p>We collect the following information when you use SnapSaver:</p>
+                    <ul>
+                        <li>URLs you submit for download</li>
+                        <li>IP addresses for security and analytics</li>
+                        <li>Browser information and usage patterns</li>
+                        <li>Email addresses for newsletter subscriptions (optional)</li>
+                    </ul>
+                    
+                    <h4>2. How We Use Your Information</h4>
+                    <p>We use your information to:</p>
+                    <ul>
+                        <li>Provide download services</li>
+                        <li>Improve our service quality</li>
+                        <li>Send newsletters (if subscribed)</li>
+                        <li>Analyze usage patterns</li>
+                        <li>Prevent abuse and maintain security</li>
+                    </ul>
+                    
+                    <h4>3. Data Storage and Security</h4>
+                    <p>Your data is stored securely and we implement appropriate security measures to protect it. Downloaded files are automatically deleted after 15 minutes.</p>
+                    
+                    <h4>4. Cookies</h4>
+                    <p>We use cookies to enhance your experience and remember your preferences. You can disable cookies in your browser settings.</p>
+                    
+                    <h4>5. Third-Party Services</h4>
+                    <p>We may use third-party services for analytics and functionality. These services have their own privacy policies.</p>
+                    
+                    <h4>6. Data Retention</h4>
+                    <p>We retain your data only as long as necessary to provide our services and comply with legal obligations.</p>
+                    
+                    <h4>7. Your Rights</h4>
+                    <p>You have the right to:</p>
+                    <ul>
+                        <li>Access your personal data</li>
+                        <li>Request correction of inaccurate data</li>
+                        <li>Request deletion of your data</li>
+                        <li>Unsubscribe from newsletters</li>
+                    </ul>
+                    
+                    <h4>8. Contact Us</h4>
+                    <p>For privacy-related questions, please contact us through our website.</p>
+                    
+                    <h4>9. Changes to This Policy</h4>
+                    <p>We may update this privacy policy from time to time. Changes will be posted on this page.</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

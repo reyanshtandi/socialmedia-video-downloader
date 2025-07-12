@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Instagram Video Downloader - Free Reels & Stories Download | SnapSaver{% endblock %}
+
+{% block description %}Download Instagram videos, reels, stories, and photos for free. Support for HD quality downloads. Fast, secure, and no registration required.{% endblock %}
+
+{% block keywords %}Instagram downloader, Instagram video download, Instagram reels download, Instagram stories download, free Instagram downloader{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fab fa-instagram me-2"></i>Instagram Download
+                </h4>
+            </div>
+            <div class="card-body">
+                <!-- URL Display -->
+                <div class="alert alert-info">
+                    <strong>Instagram URL:</strong> <a href="{{ url }}" target="_blank" class="text-decoration-none">{{ url }}</a>
+                </div>
+
+                <!-- Note about Instagram limitations -->
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Note:</strong> Instagram has rate limits and may require authentication for some content. 
+                    If download fails, try again later or use a different URL.
+                </div>
+
+                <!-- Media Info -->
+                <div id="mediaInfo" class="mb-4" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img id="mediaThumbnail" class="img-fluid rounded" alt="Instagram content thumbnail">
+                        </div>
+                        <div class="col-md-8">
+                            <h5 id="mediaTitle"></h5>
+                            <p class="text-muted mb-2"><i class="fas fa-user"></i> <span id="mediaUploader"></span></p>
+                            <p class="text-muted mb-2"><i class="fas fa-heart"></i> <span id="mediaViews"></span> likes</p>
+                            <p class="small" id="mediaDescription"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Options -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <button class="btn btn-primary btn-lg w-100" onclick="downloadMedia(false)">
+                            <i class="fas fa-video me-2"></i>Download Video/Photo
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-success btn-lg w-100" onclick="downloadMedia(true)">
+                            <i class="fas fa-music me-2"></i>Download Audio (MP3)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Instagram Features -->
+                <div class="alert alert-light">
+                    <h6><i class="fab fa-instagram text-primary me-2"></i>Instagram Download Features:</h6>
+                    <ul class="mb-0">
+                        <li>Download Instagram videos, reels, and stories</li>
+                        <li>Support for Instagram photos and carousel posts</li>
+                        <li>HD quality downloads when available</li>
+                        <li>Audio extraction from video content</li>
+                        <li>Works with public Instagram content</li>
+                    </ul>
+                </div>
+
+                <!-- Back Button -->
+                <div class="mt-4 text-center">
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Download Modal -->
+<div class="modal fade" id="downloadModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center py-4">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h5>Downloading...</h5>
+                <p class="text-muted">Please wait while we process your download</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const mediaUrl = "{{ url }}";
+
+// Load media info on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadMediaInfo();
+});
+
+function loadMediaInfo() {
+    fetch(`/get_info?url=${encodeURIComponent(mediaUrl)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Error loading media info:', data.error);
+                return;
+            }
+            
+            document.getElementById('mediaTitle').textContent = data.title || 'Instagram Media';
+            document.getElementById('mediaUploader').textContent = data.uploader || 'Unknown';
+            document.getElementById('mediaViews').textContent = data.view_count?.toLocaleString() || 'N/A';
+            document.getElementById('mediaDescription').textContent = data.description || 'No description available';
+            
+            if (data.thumbnail) {
+                document.getElementById('mediaThumbnail').src = data.thumbnail;
+            }
+            
+            document.getElementById('mediaInfo').style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Error loading media info:', error);
+        });
+}
+
+function downloadMedia(audioOnly = false) {
+    const downloadModal = new bootstrap.Modal(document.getElementById('downloadModal'));
+    downloadModal.show();
+    
+    // Redirect to download endpoint
+    setTimeout(() => {
+        const downloadUrl = `/download_media?url=${encodeURIComponent(mediaUrl)}${audioOnly ? '&audio_only=true' : ''}`;
+        window.location.href = downloadUrl;
+    }, 1000);
+}
+</script>
+{% endblock %}

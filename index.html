@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}SnapSaver - Free Video Downloader for YouTube, Instagram, TikTok, Twitter, Facebook{% endblock %}
+
+{% block description %}Download videos and images from YouTube, Instagram, TikTok, Twitter, and Facebook for free. Fast, secure, and no registration required. Support for HD video downloads and audio extraction.{% endblock %}
+
+{% block keywords %}video downloader, YouTube downloader, Instagram downloader, TikTok downloader, Twitter downloader, Facebook downloader, free video download, HD video download, social media downloader, online video downloader{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-primary">SnapSaver - Free Social Media Video Downloader</h1>
+            <p class="lead">Download videos and images from YouTube, Instagram, TikTok, Twitter, and Facebook for free</p>
+            <p class="text-muted">Fast, secure, and no registration required. Support for HD video downloads and audio extraction.</p>
+        </div>
+
+        <!-- URL Input Form -->
+        <div class="card shadow-lg mb-5">
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('detect') }}" id="urlForm">
+                    <div class="mb-3">
+                        <label for="url" class="form-label">Paste your social media link here</label>
+                        <input type="url" class="form-control form-control-lg" id="url" name="url" 
+                               placeholder="https://www.youtube.com/watch?v=example or https://instagram.com/p/example" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100" id="detectBtn">
+                        <i class="fas fa-search me-2"></i>Detect & Download
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Supported Platforms -->
+        <div class="card mb-5">
+            <div class="card-header">
+                <h5 class="mb-0">Supported Platforms</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center g-4">
+                    <div class="col-6 col-md-2">
+                        <a href="{{ url_for('youtube_page', url='https://youtube.com/watch?v=example') }}" class="text-decoration-none">
+                            <div class="platform-icon">
+                                <i class="fab fa-youtube text-danger fa-3x"></i>
+                                <p class="mt-2 small">YouTube</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <a href="{{ url_for('instagram_page', url='https://instagram.com/p/example') }}" class="text-decoration-none">
+                            <div class="platform-icon">
+                                <i class="fab fa-instagram text-primary fa-3x"></i>
+                                <p class="mt-2 small">Instagram</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <a href="{{ url_for('tiktok_page', url='https://tiktok.com/@user/video/example') }}" class="text-decoration-none">
+                            <div class="platform-icon">
+                                <i class="fab fa-tiktok text-dark fa-3x"></i>
+                                <p class="mt-2 small">TikTok</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <a href="{{ url_for('twitter_page', url='https://twitter.com/user/status/example') }}" class="text-decoration-none">
+                            <div class="platform-icon">
+                                <i class="fab fa-twitter text-info fa-3x"></i>
+                                <p class="mt-2 small">Twitter</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <a href="{{ url_for('facebook_page', url='https://facebook.com/user/videos/example') }}" class="text-decoration-none">
+                            <div class="platform-icon">
+                                <i class="fab fa-facebook text-primary fa-3x"></i>
+                                <p class="mt-2 small">Facebook</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <div class="platform-icon">
+                            <i class="fas fa-plus-circle text-muted fa-3x"></i>
+                            <p class="mt-2 small text-muted">More Soon</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Downloads -->
+        {% if recent_downloads %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Downloads</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    {% for download in recent_downloads %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">{{ download.title[:60] }}{% if download.title|length > 60 %}...{% endif %}</h6>
+                            <small class="text-muted">
+                                <i class="fab fa-{{ download.platform }}"></i> {{ download.platform.title() }}
+                                {% if download.download_type == 'audio' %} (Audio){% endif %}
+                            </small>
+                        </div>
+                        <small class="text-muted">
+                            {% if download.completed_at %}
+                                {{ download.completed_at.strftime('%m/%d %H:%M') }}
+                            {% else %}
+                                Recent
+                            {% endif %}
+                        </small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Features Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2 class="text-center mb-4">Why Choose SnapSaver for Video Downloads?</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-download text-primary fa-3x mb-3"></i>
+                                <h5>Free Video Downloads</h5>
+                                <p>Download videos from YouTube, Instagram, TikTok, Twitter, and Facebook completely free. No subscription or registration required.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-hd-video text-success fa-3x mb-3"></i>
+                                <h5>HD Quality Support</h5>
+                                <p>Download videos in high definition quality. Support for various video formats and resolutions including 4K when available.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-shield-alt text-info fa-3x mb-3"></i>
+                                <h5>Safe & Secure</h5>
+                                <p>No registration required. Your privacy is protected. All downloads are processed securely without storing personal data.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- How it Works Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2 class="text-center mb-4">How to Download Videos from Social Media</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="badge bg-primary rounded-circle p-3 mb-3">
+                                <span class="h4 text-white">1</span>
+                            </div>
+                            <h5>Copy Video Link</h5>
+                            <p>Copy the video URL from YouTube, Instagram, TikTok, Twitter, or Facebook that you want to download</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="badge bg-success rounded-circle p-3 mb-3">
+                                <span class="h4 text-white">2</span>
+                            </div>
+                            <h5>Paste & Process</h5>
+                            <p>Paste the URL into our video downloader tool and click "Detect & Download" to process the link</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="badge bg-info rounded-circle p-3 mb-3">
+                                <span class="h4 text-white">3</span>
+                            </div>
+                            <h5>Download Video</h5>
+                            <p>Choose your preferred video quality and format (video or audio only), then download the file instantly</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center py-4">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h5>Processing your request...</h5>
+                <p class="text-muted">Please wait while we detect the platform</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('urlForm').addEventListener('submit', function(e) {
+    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    loadingModal.show();
+});
+</script>
+{% endblock %}

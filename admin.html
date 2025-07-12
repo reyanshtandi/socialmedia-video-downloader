@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - SnapSaver{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Admin Dashboard</h1>
+            
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Downloads</h5>
+                            <h2 id="totalDownloads" class="mb-0">-</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Newsletter Subscribers</h5>
+                            <h2 id="totalSubscribers" class="mb-0">-</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Analytics Events</h5>
+                            <h2 id="totalAnalytics" class="mb-0">-</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">Error Logs</h5>
+                            <h2 id="totalErrors" class="mb-0">-</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="downloads-tab" data-bs-toggle="tab" data-bs-target="#downloads" type="button" role="tab">
+                        Downloads
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="analytics-tab" data-bs-toggle="tab" data-bs-target="#analytics" type="button" role="tab">
+                        Analytics
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="newsletter-tab" data-bs-toggle="tab" data-bs-target="#newsletter" type="button" role="tab">
+                        Newsletter
+                    </button>
+                </li>
+            </ul>
+            
+            <!-- Tab Content -->
+            <div class="tab-content" id="adminTabsContent">
+                <!-- Downloads Tab -->
+                <div class="tab-pane fade show active" id="downloads" role="tabpanel">
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>Recent Downloads</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Platform</th>
+                                            <th>Title</th>
+                                            <th>Status</th>
+                                            <th>IP Address</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="downloadsTable">
+                                        <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analytics Tab -->
+                <div class="tab-pane fade" id="analytics" role="tabpanel">
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>Recent Analytics Events</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Event Type</th>
+                                            <th>Platform</th>
+                                            <th>URL</th>
+                                            <th>IP Address</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="analyticsTable">
+                                        <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Newsletter Tab -->
+                <div class="tab-pane fade" id="newsletter" role="tabpanel">
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>Newsletter Subscribers</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Email</th>
+                                            <th>Status</th>
+                                            <th>IP Address</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="newsletterTable">
+                                        <tr><td colspan="4" class="text-center">Loading...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardData();
+    
+    // Load data when tabs are clicked
+    document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function(e) {
+            const target = e.target.getAttribute('data-bs-target');
+            if (target === '#downloads') loadDownloads();
+            if (target === '#analytics') loadAnalytics();
+            if (target === '#newsletter') loadNewsletter();
+        });
+    });
+});
+
+function loadDashboardData() {
+    loadDownloads();
+    loadStats();
+}
+
+function loadStats() {
+    // Load download count
+    fetch('/admin/downloads')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('totalDownloads').textContent = data.length;
+        });
+    
+    // Load subscriber count
+    fetch('/admin/newsletter')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('totalSubscribers').textContent = data.length;
+        });
+    
+    // Load analytics count
+    fetch('/admin/analytics')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('totalAnalytics').textContent = data.length;
+        });
+}
+
+function loadDownloads() {
+    fetch('/admin/downloads')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('downloadsTable');
+            tbody.innerHTML = '';
+            
+            data.forEach(download => {
+                const row = `
+                    <tr>
+                        <td>${new Date(download.created_at).toLocaleDateString()}</td>
+                        <td><span class="badge bg-primary">${download.platform}</span></td>
+                        <td>${download.title || 'Unknown'}</td>
+                        <td><span class="badge bg-${download.status === 'completed' ? 'success' : download.status === 'failed' ? 'danger' : 'warning'}">${download.status}</span></td>
+                        <td>${download.ip_address || 'Unknown'}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        })
+        .catch(error => {
+            console.error('Error loading downloads:', error);
+            document.getElementById('downloadsTable').innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error loading data</td></tr>';
+        });
+}
+
+function loadAnalytics() {
+    fetch('/admin/analytics')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('analyticsTable');
+            tbody.innerHTML = '';
+            
+            data.forEach(event => {
+                const row = `
+                    <tr>
+                        <td>${new Date(event.created_at).toLocaleDateString()}</td>
+                        <td><span class="badge bg-info">${event.event_type}</span></td>
+                        <td>${event.platform || 'N/A'}</td>
+                        <td>${event.url ? (event.url.substring(0, 50) + '...') : 'N/A'}</td>
+                        <td>${event.ip_address || 'Unknown'}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        })
+        .catch(error => {
+            console.error('Error loading analytics:', error);
+            document.getElementById('analyticsTable').innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error loading data</td></tr>';
+        });
+}
+
+function loadNewsletter() {
+    fetch('/admin/newsletter')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('newsletterTable');
+            tbody.innerHTML = '';
+            
+            data.forEach(subscriber => {
+                const row = `
+                    <tr>
+                        <td>${new Date(subscriber.subscribed_at).toLocaleDateString()}</td>
+                        <td>${subscriber.email}</td>
+                        <td><span class="badge bg-${subscriber.is_active ? 'success' : 'secondary'}">${subscriber.is_active ? 'Active' : 'Inactive'}</span></td>
+                        <td>${subscriber.ip_address || 'Unknown'}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        })
+        .catch(error => {
+            console.error('Error loading newsletter:', error);
+            document.getElementById('newsletterTable').innerHTML = '<tr><td colspan="4" class="text-center text-danger">Error loading data</td></tr>';
+        });
+}
+</script>
+{% endblock %}
