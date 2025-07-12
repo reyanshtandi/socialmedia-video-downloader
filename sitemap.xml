@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>{{ url_for('index', _external=True) }}</loc>
+        <lastmod>{{ current_date }}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>{{ url_for('youtube_page', url='https://youtube.com/watch?v=example', _external=True) }}</loc>
+        <lastmod>{{ current_date }}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>{{ url_for('instagram_page', url='https://instagram.com/p/example', _external=True) }}</loc>
+        <lastmod>{{ current_date }}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>{{ url_for('tiktok_page', url='https://tiktok.com/@user/video/example', _external=True) }}</loc>
+        <lastmod>{{ current_date }}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>{{ url_for('twitter_page', url='https://twitter.com/user/status/example', _external=True) }}</loc>
+        <lastmod>{{ current_date }}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>{{ url_for('facebook_page', url='https://facebook.com/user/videos/example', _external=True) }}</loc>
+        <lastmod>{{ current_date }}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>{{ url_for('terms', _external=True) }}</loc>
+        <lastmod>{{ current_date }}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    <url>
+        <loc>{{ url_for('privacy', _external=True) }}</loc>
+        <lastmod>{{ current_date }}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+</urlset>
