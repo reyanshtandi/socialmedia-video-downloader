@@ -1,0 +1,78 @@
+You are a professional full-stack developer.
+
+Create a complete, professional-grade **Social Media Downloader Web App** using **Python Flask** for backend and **HTML/CSS/JavaScript (with Bootstrap)** for frontend. The app should run smoothly on **Replit (free tier)** and allow users to download videos/images from multiple social platforms.
+
+🎯 Functionality Overview:
+
+1. 🔗 **Homepage (`/`)**:
+   - Clean, modern UI with branding ("SnapSaver" or "QuickClip")
+   - URL input box with placeholder ("Paste any video link here...")
+   - Platform icons: YouTube, Instagram, TikTok, Twitter (X), Facebook
+   - On form submission, detect which platform the URL belongs to and redirect to a custom page
+
+2. 🧠 **Platform Detection Logic**:
+   - Write a Python utility function `detect_platform(url)` that identifies:
+     - `youtube.com` or `youtu.be` → YouTube
+     - `instagram.com` → Instagram
+     - `tiktok.com` → TikTok
+     - `twitter.com` or `x.com` → Twitter
+     - `facebook.com` → Facebook
+   - Redirect to respective route with `?url=...` (e.g., `/youtube?url=...`)
+
+3. 📄 **Platform-Specific Pages**:
+   - `/youtube`, `/instagram`, `/tiktok`, `/twitter`, `/facebook`
+   - Each page must:
+     - Show preview area: “URL Detected: [link]”
+     - Show appropriate platform icon or header
+     - Contain a “Download” button to fetch the media
+     - Optional: preview thumbnail using metadata if available
+
+4. ⚙️ **Backend Downloading (yt-dlp)**:
+   - On download request, use `yt-dlp` to fetch video/audio or image
+   - Save file temporarily in a `/downloads` folder
+   - Use Flask’s `send_file()` to return downloadable file
+   - Auto-delete old files after 10-15 minutes using Python cleanup script (optional)
+
+5. 🧩 **File/Folder Structure**:
+   /main.py                       → Flask server  
+   /platform_detector.py         → URL detection utility  
+   /requirements.txt             → flask, yt-dlp  
+   /templates/                   → index.html, youtube.html, etc.  
+   /static/style.css             → Basic responsive styling  
+   /downloads/                   → Temporary files  
+
+6. 🧼 **User Interface (Frontend)**:
+   - Responsive (mobile + desktop)
+   - Use Bootstrap or modern minimal design
+   - Show toast/error if URL not supported
+   - Show loading spinner while processing
+   - Dark/light mode toggle (optional)
+
+7. 🚀 **Deployment-Ready (Replit Compatible)**:
+   - Should work instantly on Replit (no extra setup)
+   - All endpoints must use Flask routes
+   - Code should be clean, modular, and documented with comments
+
+8. 🧾 **Legal / Safety Notes**:
+   - Add footer with links to:
+     - Terms of Service (template)
+     - Privacy Policy (template)
+   - Include disclaimer: “This tool is for personal and educational use only.”
+
+9. 💰 **Optional Monetization Prep**:
+   - Leave banner space for Google AdSense
+   - Add newsletter email box (just frontend)
+
+10. 📦 **Extras (if possible)**:
+    - Show last 3 downloads (local cache or browser)
+    - Allow audio-only (MP3) option for YouTube
+
+🔁 Please generate all source code files, including:
+- `main.py`  
+- `platform_detector.py`  
+- Templates (HTMLs for each platform)  
+- CSS (basic styling)  
+- `requirements.txt`  
+- Any cleanup or helper scripts if needed
+
+Keep code clean, well-commented, and structured to be production-ready for future scaling.

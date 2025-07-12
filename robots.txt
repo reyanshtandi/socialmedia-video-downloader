@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /download
+Disallow: /get_info
+
+Sitemap: {{ url_for('sitemap', _external=True) }}

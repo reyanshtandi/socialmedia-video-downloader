@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Terms of Service - SnapSaver{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="mb-4">Terms of Service</h1>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h4>1. Acceptance of Terms</h4>
+                    <p>By accessing and using SnapSaver, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                    
+                    <h4>2. Use License</h4>
+                    <p>SnapSaver grants you a personal, non-exclusive, non-transferable license to use this service for personal and educational purposes only.</p>
+                    
+                    <h4>3. Prohibited Uses</h4>
+                    <p>You may not use SnapSaver to:</p>
+                    <ul>
+                        <li>Download copyrighted content without permission</li>
+                        <li>Violate any applicable laws or regulations</li>
+                        <li>Infringe on the rights of others</li>
+                        <li>Use the service for commercial purposes without authorization</li>
+                    </ul>
+                    
+                    <h4>4. Disclaimer</h4>
+                    <p>SnapSaver is provided "as is" without any representations or warranties, express or implied. We do not warrant that the service will be uninterrupted or error-free.</p>
+                    
+                    <h4>5. Limitation of Liability</h4>
+                    <p>In no event shall SnapSaver be liable for any indirect, incidental, special, consequential, or punitive damages arising out of your use of the service.</p>
+                    
+                    <h4>6. Copyright</h4>
+                    <p>Users are responsible for ensuring they have the right to download and use any content. SnapSaver does not claim ownership of any downloaded content.</p>
+                    
+                    <h4>7. Changes to Terms</h4>
+                    <p>We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting.</p>
+                    
+                    <h4>8. Contact Information</h4>
+                    <p>For questions about these Terms of Service, please contact us through our website.</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

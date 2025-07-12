@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Twitter Video Downloader - Free X Video Download | SnapSaver{% endblock %}
+
+{% block description %}Download Twitter (X) videos and GIFs for free. Support for HD quality downloads. Fast, secure, and no registration required.{% endblock %}
+
+{% block keywords %}Twitter downloader, Twitter video download, X video download, Twitter to MP4, free Twitter downloader{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-lg">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">
+                    <i class="fab fa-twitter me-2"></i>Twitter Download
+                </h4>
+            </div>
+            <div class="card-body">
+                <!-- URL Display -->
+                <div class="alert alert-info">
+                    <strong>Twitter (X) URL:</strong> <a href="{{ url }}" target="_blank" class="text-decoration-none">{{ url }}</a>
+                </div>
+
+                <!-- Tweet Info -->
+                <div id="tweetInfo" class="mb-4" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img id="tweetThumbnail" class="img-fluid rounded" alt="Tweet media">
+                        </div>
+                        <div class="col-md-8">
+                            <h5 id="tweetTitle"></h5>
+                            <p class="text-muted mb-2"><i class="fas fa-user"></i> <span id="tweetUploader"></span></p>
+                            <p class="text-muted mb-2"><i class="fas fa-retweet"></i> <span id="tweetViews"></span> views</p>
+                            <p class="small" id="tweetDescription"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Options -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <button class="btn btn-primary btn-lg w-100" onclick="downloadTweet(false)">
+                            <i class="fas fa-video me-2"></i>Download Video/GIF
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-success btn-lg w-100" onclick="downloadTweet(true)">
+                            <i class="fas fa-music me-2"></i>Download Audio (MP3)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Twitter Features -->
+                <div class="alert alert-light">
+                    <h6><i class="fab fa-twitter text-info me-2"></i>Twitter (X) Download Features:</h6>
+                    <ul class="mb-0">
+                        <li>Download Twitter videos and GIFs</li>
+                        <li>Support for HD quality downloads</li>
+                        <li>Audio extraction from video tweets</li>
+                        <li>Fast download speeds</li>
+                        <li>Works with Twitter threads and retweets</li>
+                    </ul>
+                </div>
+
+                <!-- Back Button -->
+                <div class="mt-4 text-center">
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Download Modal -->
+<div class="modal fade" id="downloadModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center py-4">
+                <div class="spinner-border text-info mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h5>Downloading...</h5>
+                <p class="text-muted">Please wait while we process your download</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const tweetUrl = "{{ url }}";
+
+// Load tweet info on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadTweetInfo();
+});
+
+function loadTweetInfo() {
+    fetch(`/get_info?url=${encodeURIComponent(tweetUrl)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Error loading tweet info:', data.error);
+                return;
+            }
+            
+            document.getElementById('tweetTitle').textContent = data.title || 'Twitter Media';
+            document.getElementById('tweetUploader').textContent = data.uploader || 'Unknown';
+            document.getElementById('tweetViews').textContent = data.view_count?.toLocaleString() || 'N/A';
+            document.getElementById('tweetDescription').textContent = data.description || 'No description available';
+            
+            if (data.thumbnail) {
+                document.getElementById('tweetThumbnail').src = data.thumbnail;
+            }
+            
+            document.getElementById('tweetInfo').style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Error loading tweet info:', error);
+        });
+}
+
+function downloadTweet() {
+    const downloadModal = new bootstrap.Modal(document.getElementById('downloadModal'));
+    downloadModal.show();
+    
+    const downloadUrl = `/download?url=${encodeURIComponent(tweetUrl)}`;
+    
+    // Create a temporary link to trigger download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = '';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Hide modal after a delay
+    setTimeout(() => {
+        downloadModal.hide();
+    }, 3000);
+}
+</script>
+{% endblock %}
